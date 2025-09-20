@@ -6,6 +6,12 @@ import type {
   RequestWithContext,
 } from "./types.ts";
 
++ /**
++  * This module contains functions to compose and manage middleware for Deno.serve.
++  * It provides utilities to create middleware chains, handle errors, and share context.
++  * @module
++  */
+
 /**
  * Composes multiple middleware functions with a final handler to create a single handler
  * that's compatible with Deno.serve.
