@@ -1,3 +1,9 @@
+/**
+ * Request timeout middleware for limiting request processing time.
+ * Automatically cancels requests that exceed the specified timeout duration.
+ * @module
+ */
+
 import type { Middleware } from "./types.ts";
 
 /**

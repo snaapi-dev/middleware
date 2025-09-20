@@ -1,3 +1,9 @@
+/**
+ * CORS (Cross-Origin Resource Sharing) middleware.
+ * Handles preflight requests and adds appropriate CORS headers to responses.
+ * @module
+ */
+
 import type { Middleware } from "./types.ts";
 
 /**

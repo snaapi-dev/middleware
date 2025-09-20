@@ -1,3 +1,9 @@
+/**
+ * Logger middleware for HTTP request and response logging.
+ * Provides configurable logging of requests with support for different formats and detail levels.
+ * @module
+ */
+
 import type { Middleware } from "./types.ts";
 import { setContext } from "./mod.ts";
 /**
@@ -65,9 +71,9 @@ export function logger(options: LoggerOptions = {}): Middleware {
         break;
       case "detailed":
         console.log(
-          `[${timestamp}] ${req.method} ${url.pathname}${url.search} -> ${response.status} (${
-            duration.toFixed(2)
-          }ms)`,
+          `[${timestamp}] ${req.method} ${url.pathname}${url.search} -> ${
+            response.status
+          } (${duration.toFixed(2)}ms)`
         );
         if (includeHeaders) {
           console.log("Headers:", Object.fromEntries(req.headers.entries()));
@@ -79,9 +85,9 @@ export function logger(options: LoggerOptions = {}): Middleware {
       case "simple":
       default:
         console.log(
-          `${req.method} ${url.pathname} -> ${response.status} (${
-            duration.toFixed(2)
-          }ms)`,
+          `${req.method} ${url.pathname} -> ${
+            response.status
+          } (${duration.toFixed(2)}ms)`
         );
         break;
     }

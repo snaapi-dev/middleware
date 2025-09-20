@@ -1,11 +1,17 @@
 /**
+ * Type definitions for the middleware system.
+ * Provides TypeScript types for handlers, middleware functions, and configuration options.
+ * @module
+ */
+
+/**
  * A middleware function that processes a Request and can modify it or the Response.
  * It receives the Request and a `next` function to call the next middleware or handler.
  * This is compatible with Deno.serve handlers.
  */
 export type Middleware = (
   req: Request,
-  next: () => Promise<Response>,
+  next: () => Promise<Response>
 ) => Promise<Response>;
 
 /**
