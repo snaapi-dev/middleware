@@ -1,0 +1,22 @@
+{
+  "name": "@snaapi/middleware",
+  "version": "0.1.0",
+  "description": "A collection of middleware for Deno web applications.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/snaapi-dev/middleware.git"
+  },
+  "tasks": {
+    "test": "deno test"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1"
+  },
+  "exports": {
+    "./types": "./types.ts",
+    "./logger": "./logger.ts",
+    "./cors": "./cors.ts",
+    "./ratelimit": "./ratelimit.ts"
+  }
+}
