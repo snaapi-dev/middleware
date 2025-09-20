@@ -14,9 +14,11 @@
     "@std/assert": "jsr:@std/assert@1"
   },
   "exports": {
+    ".": "./mod.ts",
     "./types": "./types.ts",
     "./logger": "./logger.ts",
     "./cors": "./cors.ts",
-    "./ratelimit": "./ratelimit.ts"
+    "./ratelimit": "./ratelimit.ts",
+    "./timeout": "./timeout.ts"
   }
 }

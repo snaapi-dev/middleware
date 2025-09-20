@@ -52,16 +52,16 @@ export function rateLimit(options: RateLimitOptions): Middleware {
             headers: {
               "Content-Type": "application/json",
               "Retry-After": Math.ceil(
-                (client.resetTime - now) / 1000
+                (client.resetTime - now) / 1000,
               ).toString(),
               "X-RateLimit-Limit": maxRequests.toString(),
               "X-RateLimit-Remaining": Math.max(
                 0,
-                maxRequests - client.count
+                maxRequests - client.count,
               ).toString(),
               "X-RateLimit-Reset": client.resetTime.toString(),
             },
-          }
+          },
         );
       }
     }
@@ -82,11 +82,11 @@ export function rateLimit(options: RateLimitOptions): Middleware {
       response.headers.set("X-RateLimit-Limit", maxRequests.toString());
       response.headers.set(
         "X-RateLimit-Remaining",
-        Math.max(0, maxRequests - currentClient.count).toString()
+        Math.max(0, maxRequests - currentClient.count).toString(),
       );
       response.headers.set(
         "X-RateLimit-Reset",
-        currentClient.resetTime.toString()
+        currentClient.resetTime.toString(),
       );
     }
 

@@ -1,12 +1,16 @@
 # Deno.serve Compatible Middleware System
 
-This middleware system provides a flexible and powerful way to compose middleware functions that are fully compatible with `Deno.serve` handlers.
+This middleware system provides a flexible and powerful way to compose
+middleware functions that are fully compatible with `Deno.serve` handlers.
 
 ## Features
 
-- 🔄 **Full Deno.serve compatibility** - Works seamlessly with standard Deno HTTP handlers
-- 🛠️ **Flexible composition** - Multiple ways to compose middleware (functional and fluent)
-- 🔧 **Built-in middleware** - Common middleware like CORS, logging, auth, rate limiting
+- 🔄 **Full Deno.serve compatibility** - Works seamlessly with standard Deno
+  HTTP handlers
+- 🛠️ **Flexible composition** - Multiple ways to compose middleware (functional
+  and fluent)
+- 🔧 **Built-in middleware** - Common middleware like CORS, logging, auth, rate
+  limiting
 - 🚨 **Error handling** - Configurable error handling and recovery
 - 📊 **Request context** - Share data between middleware and handlers
 - ⚡ **Type-safe** - Full TypeScript support with proper typing
@@ -16,8 +20,8 @@ This middleware system provides a flexible and powerful way to compose middlewar
 ### Basic Usage
 
 ```typescript
-import { createMiddlewareChain } from "./http/middleware/index.ts";
-import { logger, cors, auth } from "./http/middleware/common.ts";
+import { createMiddlewareChain } from "jsr:@snaapi/middleware";
+import { auth, cors, logger } from "jsr:@snaapi/middleware";
 
 // Your application handler
 function myHandler(req: Request): Response {
@@ -38,16 +42,16 @@ Deno.serve({ port: 8000 }, handler);
 ### Alternative Composition
 
 ```typescript
-import { compose } from "./http/middleware/index.ts";
-import { logger, cors, auth } from "./http/middleware/common.ts";
+import { compose } from "jsr:@snaapi/middleware";
+import { auth, cors, logger } from "jsr:@snaapi/middleware";
 
 const handler = compose(
   [
     logger(),
     cors(),
-    auth("my-secret-token")
+    auth("my-secret-token"),
   ],
-  myHandler
+  myHandler,
 );
 
 Deno.serve({ port: 8000 }, handler);
@@ -60,7 +64,7 @@ Deno.serve({ port: 8000 }, handler);
 Logs HTTP requests with configurable formats:
 
 ```typescript
-import { logger } from "./http/middleware/common.ts";
+import { logger } from "jsr:@snaapi/middleware/logger";
 
 // Simple logging
 .use(logger())
@@ -81,7 +85,7 @@ import { logger } from "./http/middleware/common.ts";
 Handles Cross-Origin Resource Sharing:
 
 ```typescript
-import { cors } from "./http/middleware/common.ts";
+import { cors } from "jsr:@snaapi/middleware/cors";
 
 // Basic CORS (allows all origins)
 .use(cors())
@@ -100,7 +104,7 @@ import { cors } from "./http/middleware/common.ts";
 Bearer token authentication:
 
 ```typescript
-import { auth } from "./http/middleware/common.ts";
+import { auth } from "jsr:@snaapi/middleware";
 
 // Basic auth
 .use(auth("my-secret-token"))
@@ -111,7 +115,7 @@ import { auth } from "./http/middleware/common.ts";
 Request rate limiting per client:
 
 ```typescript
-import { rateLimit } from "./http/middleware/common.ts";
+import { rateLimit } from "jsr:@snaapi/middleware/ratelimit";
 
 // 100 requests per minute
 .use(rateLimit({
@@ -132,7 +136,7 @@ import { rateLimit } from "./http/middleware/common.ts";
 Timeout long-running requests:
 
 ```typescript
-import { timeout } from "./http/middleware/common.ts";
+import { timeout } from "jsr:@snaapi/middleware/timeout";
 
 // 30 second timeout
 .use(timeout(30000))
@@ -143,14 +147,14 @@ import { timeout } from "./http/middleware/common.ts";
 Create your own middleware functions:
 
 ```typescript
-import { Middleware } from "./http/middleware/types.ts";
+import { Middleware } from "jsr:@snaapi/middleware/types";
 
 // Simple custom middleware
 const customMiddleware: Middleware = async (req, next) => {
   console.log(`Processing ${req.method} ${req.url}`);
-  
+
   const response = await next();
-  
+
   console.log(`Responded with ${response.status}`);
   return response;
 };
@@ -159,11 +163,11 @@ const customMiddleware: Middleware = async (req, next) => {
 function customAuth(apiKey: string): Middleware {
   return async (req, next) => {
     const key = req.headers.get("X-API-Key");
-    
+
     if (key !== apiKey) {
       return new Response("Unauthorized", { status: 401 });
     }
-    
+
     return next();
   };
 }
@@ -174,7 +178,7 @@ function customAuth(apiKey: string): Middleware {
 Share data between middleware:
 
 ```typescript
-import { withContext, getContext, setContext } from "./http/middleware/index.ts";
+import { withContext, getContext, setContext } from "jsr:@snaapi/middleware";
 
 // Add context middleware
 .use(withContext({ startTime: Date.now() }))
@@ -204,12 +208,12 @@ createMiddlewareChain()
       console.error(`Error in ${req.url}:`, error);
       return new Response(
         JSON.stringify({ error: "Something went wrong" }),
-        { 
+        {
           status: 500,
-          headers: { "Content-Type": "application/json" }
-        }
+          headers: { "Content-Type": "application/json" },
+        },
       );
-    }
+    },
   })
   .handle(myHandler);
 ```
@@ -220,8 +224,8 @@ createMiddlewareChain()
 
 ```typescript
 import { ResourceHandler } from "./server/resource.ts";
-import { createMiddlewareChain } from "./http/middleware/index.ts";
-import { logger, cors, auth } from "./http/middleware/common.ts";
+import { createMiddlewareChain } from "jsr:@snaapi/middleware";
+import { auth, cors, logger } from "jsr:@snaapi/middleware";
 
 const resourceHandler = new ResourceHandler();
 
@@ -241,14 +245,14 @@ Apply different middleware to different routes:
 ```typescript
 const handler = async (req: Request): Promise<Response> => {
   const url = new URL(req.url);
-  
+
   if (url.pathname === "/health") {
     // Minimal middleware for health check
     return createMiddlewareChain()
       .use(logger({ format: "simple" }))
       .handle(healthHandler)(req);
   }
-  
+
   // Full middleware stack for API routes
   return createMiddlewareChain()
     .use(logger({ format: "detailed" }))
@@ -265,7 +269,7 @@ const handler = async (req: Request): Promise<Response> => {
 ```typescript
 type Middleware = (
   req: Request,
-  next: () => Promise<Response>
+  next: () => Promise<Response>,
 ) => Promise<Response>;
 ```
 

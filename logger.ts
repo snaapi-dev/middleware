@@ -65,9 +65,9 @@ export function logger(options: LoggerOptions = {}): Middleware {
         break;
       case "detailed":
         console.log(
-          `[${timestamp}] ${req.method} ${url.pathname}${url.search} -> ${
-            response.status
-          } (${duration.toFixed(2)}ms)`
+          `[${timestamp}] ${req.method} ${url.pathname}${url.search} -> ${response.status} (${
+            duration.toFixed(2)
+          }ms)`,
         );
         if (includeHeaders) {
           console.log("Headers:", Object.fromEntries(req.headers.entries()));
@@ -79,9 +79,9 @@ export function logger(options: LoggerOptions = {}): Middleware {
       case "simple":
       default:
         console.log(
-          `${req.method} ${url.pathname} -> ${
-            response.status
-          } (${duration.toFixed(2)}ms)`
+          `${req.method} ${url.pathname} -> ${response.status} (${
+            duration.toFixed(2)
+          }ms)`,
         );
         break;
     }
