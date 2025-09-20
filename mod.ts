@@ -6,11 +6,11 @@ import type {
   RequestWithContext,
 } from "./types.ts";
 
-+ /**
-+  * This module contains functions to compose and manage middleware for Deno.serve.
-+  * It provides utilities to create middleware chains, handle errors, and share context.
-+  * @module
-+  */
+/**
+ * This module contains functions to compose and manage middleware for Deno.serve.
+ * It provides utilities to create middleware chains, handle errors, and share context.
+ * @module
+ */
 
 /**
  * Composes multiple middleware functions with a final handler to create a single handler
@@ -35,7 +35,7 @@ import type {
 export function compose(
   middlewares: Middleware[],
   handler: Handler,
-  options: MiddlewareOptions = {},
+  options: MiddlewareOptions = {}
 ): Handler {
   const { continueOnError = false, errorHandler = defaultErrorHandler } =
     options;
@@ -151,7 +151,7 @@ export function setContext(req: Request, key: string, value: unknown): void {
  */
 export function withMiddleware(
   middleware: Middleware,
-  handler: Handler,
+  handler: Handler
 ): Handler {
   return compose([middleware], handler);
 }
