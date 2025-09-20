@@ -287,16 +287,6 @@ interface RequestContext {
 }
 ```
 
-## Examples
-
-See `./http/examples.ts` for complete working examples including:
-
-- Basic server setup
-- Production configuration
-- Multiple handler routing
-- Custom middleware implementation
-- Error handling strategies
-
 ## Migration from Existing Code
 
 To migrate existing code:
