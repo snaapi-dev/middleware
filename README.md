@@ -20,8 +20,13 @@ middleware functions that are fully compatible with `Deno.serve` handlers.
 ### Basic Usage
 
 ```typescript
-import { createMiddlewareChain } from "jsr:@snaapi/middleware";
-import { auth, cors, logger } from "jsr:@snaapi/middleware";
+import { 
+  createMiddlewareChain,
+  logger,
+  cors,
+  rateLimit,
+  timeout
+} from "jsr:@snaapi/middleware";
 
 // Your application handler
 function myHandler(req: Request): Response {
@@ -32,7 +37,8 @@ function myHandler(req: Request): Response {
 const handler = createMiddlewareChain()
   .use(logger())
   .use(cors())
-  .use(auth("my-secret-token"))
+  .use(rateLimit({ windowMs: 60000, maxRequests: 100 }))
+  .use(timeout(30000))
   .handle(myHandler);
 
 // Start server
@@ -42,14 +48,20 @@ Deno.serve({ port: 8000 }, handler);
 ### Alternative Composition
 
 ```typescript
-import { compose } from "jsr:@snaapi/middleware";
-import { auth, cors, logger } from "jsr:@snaapi/middleware";
+import { 
+  compose,
+  logger,
+  cors,
+  rateLimit,
+  timeout
+} from "jsr:@snaapi/middleware";
 
 const handler = compose(
   [
     logger(),
     cors(),
-    auth("my-secret-token"),
+    rateLimit({ windowMs: 60000, maxRequests: 100 }),
+    timeout(30000),
   ],
   myHandler,
 );
@@ -64,7 +76,7 @@ Deno.serve({ port: 8000 }, handler);
 Logs HTTP requests with configurable formats:
 
 ```typescript
-import { logger } from "jsr:@snaapi/middleware/logger";
+import { logger } from "jsr:@snaapi/middleware";
 
 // Simple logging
 .use(logger())
@@ -85,7 +97,7 @@ import { logger } from "jsr:@snaapi/middleware/logger";
 Handles Cross-Origin Resource Sharing:
 
 ```typescript
-import { cors } from "jsr:@snaapi/middleware/cors";
+import { cors } from "jsr:@snaapi/middleware";
 
 // Basic CORS (allows all origins)
 .use(cors())
@@ -99,23 +111,12 @@ import { cors } from "jsr:@snaapi/middleware/cors";
 }))
 ```
 
-### Authentication
-
-Bearer token authentication:
-
-```typescript
-import { auth } from "jsr:@snaapi/middleware";
-
-// Basic auth
-.use(auth("my-secret-token"))
-```
-
 ### Rate Limiting
 
 Request rate limiting per client:
 
 ```typescript
-import { rateLimit } from "jsr:@snaapi/middleware/ratelimit";
+import { rateLimit } from "jsr:@snaapi/middleware";
 
 // 100 requests per minute
 .use(rateLimit({
@@ -131,12 +132,14 @@ import { rateLimit } from "jsr:@snaapi/middleware/ratelimit";
 }))
 ```
 
+
+
 ### Request Timeout
 
 Timeout long-running requests:
 
 ```typescript
-import { timeout } from "jsr:@snaapi/middleware/timeout";
+import { timeout } from "jsr:@snaapi/middleware";
 
 // 30 second timeout
 .use(timeout(30000))
@@ -147,7 +150,7 @@ import { timeout } from "jsr:@snaapi/middleware/timeout";
 Create your own middleware functions:
 
 ```typescript
-import { Middleware } from "jsr:@snaapi/middleware/types";
+import { type Middleware } from "jsr:@snaapi/middleware";
 
 // Simple custom middleware
 const customMiddleware: Middleware = async (req, next) => {
@@ -224,15 +227,19 @@ createMiddlewareChain()
 
 ```typescript
 import { ResourceHandler } from "./server/resource.ts";
-import { createMiddlewareChain } from "jsr:@snaapi/middleware";
-import { auth, cors, logger } from "jsr:@snaapi/middleware";
+import { 
+  createMiddlewareChain,
+  logger,
+  cors,
+  rateLimit
+} from "jsr:@snaapi/middleware";
 
 const resourceHandler = new ResourceHandler();
 
 const handler = createMiddlewareChain()
   .use(logger())
   .use(cors())
-  .use(auth("secret-token"))
+  .use(rateLimit({ windowMs: 60000, maxRequests: 100 }))
   .handle(resourceHandler.handler.bind(resourceHandler));
 
 Deno.serve({ port: 8000 }, handler);
@@ -309,7 +316,7 @@ Deno.serve({ port: 8000 }, resourceHandler.handler.bind(resourceHandler));
 const handler = createMiddlewareChain()
   .use(logger())
   .use(cors())
-  .use(auth("token"))
+  .use(rateLimit({ windowMs: 60000, maxRequests: 100 }))
   .handle(resourceHandler.handler.bind(resourceHandler));
 
 Deno.serve({ port: 8000 }, handler);
